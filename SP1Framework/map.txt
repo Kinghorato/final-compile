@@ -1,0 +1,32 @@
+
+#############################################################################################################################################
+##               ##0sssssssssssssssssssssssssssssssssssssssss0##lll    llB      lll#T BD              ##                                   ##
+##               ##ssssssssssssssss0sssssssssssssssssssss0ssss##lll lllllllllll lll#####              E                                    ##
+##               ##ssssssss#ssssssssssss#sssssssssssssssssssss##lll ll       ll lll#                  ##                                   ##
+##               ##ssssssssssss0ssssssssssss0ssssss0ssssssss0s##lll llll   llll lll#                  ## ####################################
+##               ##sssss0sssss0ssssssss0sssssssssss#ssssssssss##l l llll   llll lll#   Z    Z     Z   ##          #   #####   ##### #      ##
+##               ##ssssssssssssssssssssssss0ssss#0s0ssssssssss##l l ll       l    l#                  ## #########   #   ## #      # ########
+##               ##ssssssssss#ssssssssss sssssssssssssssssssss##l l llll   llll l l#                  ## #  #   # ## ##    # ####          ##
+##               ##sssss0ssssss0sss0ssssssssssssssssssssssss0s##l l             l l#   Z    Z     Z   #### #####     ### ##### # ####### ####
+##               ##sssssssssssss#sssss##ssss0sssssssssssssssss##l llllll   llllll l#                  #### #  ###       # #   # #          ##
+##               ##sssssssssssssssssss##sssss#sss0sssssss0ssss##l l             l l#                  ##    #    # #####   #### #############
+##               ##0ssssssssss0ssssssssssssssssssssssssssssss0##l llllll   llllll l#   Z    Z     Z   ############# #   ###   # ##                  
+####### #D####################D#################### ############l                 l#                  ##           # ##### ### #### ### #####
+##           z   z    z      z z   z   z   z##                ##llllllll   llllllll#                  ## ##### ####### #    ###    # ##     #
+##     z   z       z    z  z     z   z   z  ##                ##llllllll   llllllll#        T         ## ##   #        # #####  ## # ########
+##                       z     z       z   z##                ###########D###########################E## ## # #### #####       ###   ########
+## z  z   z    z    zz   z       z   z   z  ##                ##       S                              ## #### #### ########### ## ##    #####
+##   z       z   z   z       z         z   z##   Generator     E                                      ##                        #############
+###########    z ############### #############                 ##################### ########################################################
+###########      ##                     #   ##                 ####################   ##       ##       ##       ##        Legend          ##
+########### z  z ##   #### #  ####   #    # ##                 ##################### ### T   T ## T   T ## T   T ##                        ##
+########### z    #         #         # #######                 #########        ###   ##   T   ##   T   ##   T   ##                        ##
+###########    z #    #    #  #########     ############################        #### ##############################                        ##
+##        #      ##   #                                        X########        #     ##       ##       ##       ##                        ##
+##        #  z   #######################################################        D     ## T   T ## T   T ## T   T ##                        ##
+##          z          z   z  ##       #       #       #   ##         ##        #     ##   T   ##   T   ##   T   ##                        ##
+##            z                                            D          ##        #### ##############################                        ##
+##   X    #  z      z    z    ##       #       #       #   ##         #############   ##       ##       ##       ##                        ##
+##        #      z           z###################################################### ###     T ## T   T ##     T ##                        ##
+###############################################################################T      ##   T   ##   T   ##   T   ##                        ##
+#############################################################################################################################################
