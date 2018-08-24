@@ -397,7 +397,6 @@ void gameplay()            // gameplay logic
 	Levers();			// Lever for Door
 	Collision();		// In-game Objects Collision
 	gameBatteries();	// Batteries
-	BatGenerator();		// Generator
 	Teleporter();		// Teleporter function
 	//
 
@@ -905,24 +904,6 @@ void moveCharacter()
 	}
 }
 
-void BatGenerator()
-{
-	/*if (Batteries == 3)
-	{
-		if (g_sChar.m_cLocation.X == g_sBatDoor.m_cLocation.X + 1 && g_sChar.m_cLocation.Y == g_sBatDoor.m_cLocation.Y)
-		{
-			g_Bat_Door_Close = false;
-		}
-	}
-
-	if (g_Bat_Door_Close == false)
-	{
-		if (Batteries == 2)
-		{
-			g_Bat_Door_Close1 = false;
-		}
-	}*/
-}
 
 void Teleporter()
 {

@@ -1,3 +1,30 @@
-﻿  LINK : D:\Users\l533\Desktop\final compile\Debug\SP1Framework.exe not found or not built by the last incremental link; performing full link
+﻿  game.cpp
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(193): warning C4553: '==': operator has no effect; did you intend '='?
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(581): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(632): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1088): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1089): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1090): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1091): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1092): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1095): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1252): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1288): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1293): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1298): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1303): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1308): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1313): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1358): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1362): warning C4309: '=': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1389): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1391): warning C4018: '<': signed/unsigned mismatch
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1396): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1416): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1421): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1453): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1462): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1472): warning C4309: 'argument': truncation of constant value
+d:\users\l533\desktop\final compile\sp1framework\game.cpp(1504): warning C4018: '<': signed/unsigned mismatch
   SP1Framework.vcxproj -> D:\Users\l533\Desktop\final compile\Debug\SP1Framework.exe
   SP1Framework.vcxproj -> D:\Users\l533\Desktop\final compile\Debug\SP1Framework.pdb (Full PDB)

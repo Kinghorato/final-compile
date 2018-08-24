@@ -103,7 +103,6 @@ void gameBatteries();
 void Levers();
 void Collision();
 void renderGenerator();
-void BatGenerator();
 //
 
 //PY
