@@ -9,7 +9,15 @@ double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool g_abKeyPressed[K_COUNT];
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
-SGameChar   g_sChar, g_sDoor1, g_slever1, g_sBatteries, g_sBatteries1, g_sBatteries2, g_sBatteries3 , g_sBatteries4 , g_sBatDoor, g_sGenerator , g_sCoin1, g_sCoin2, g_sCoin3;
+SGameChar   g_sChar,
+				//Doors and Switches
+				g_sDoor1, g_sBatDoor, g_sBatDoor1, g_sBatDoor2, g_slever1,
+					//Batteries
+					g_sBatteries, g_sBatteries1, g_sBatteries2, g_sBatteries3, g_sBatteries4,
+						//Generators
+						g_sGenerator, g_sGenerator1,
+							//Coins
+							g_sCoin1, g_sCoin2, g_sCoin3;
 // Gary Vars
 double g_dEnemyTime1;
 double g_dEnemyTime2;
@@ -31,24 +39,30 @@ int Botnumber = 0;
 //
 
 //Peng Yang Vars
-bool	doorClosed;
+bool	doorClosed, doorClosed1;
 bool	switchOn;
 bool	B1, B2, B3, B4, ClearedPuz;
-objects g_sDoors[8], g_sTrigPlate[2], g_sBlock[2];
-COORD doorz[6] = { { 9,13 },{ 63,27 },{ 30,13 },{ 80,25 },{ 73,16 },{ 87,2 } };
-COORD plates[2] = { { 5,28 },{ 63,24 } };
+objects g_sDoors[6], g_sTrigPlate[2], g_sBlock[2];
+COORD doorz[6] = { { 9,13 },{ 59,27 },{ 30,13 },{ 80,25 },{ 73,16 },{ 87,2 } };
+COORD plates[2] = { { 5,28 },{ 43,24 } };
 COORD puzzleSwitch[9] = { { 92,12 },{ 98,9 },{ 87,9 },{ 92,6 },{ 87,12 },{ 98,12 },{ 92,9 },{ 87,6 },{ 98,6 } }; // first 4 opens door(by sequence) other 5 reset buttons
 //
 
 //Sufyan Vars
 int		coinAmt = 0;
 bool	visibility = false;
+bool	gameover = false;
+
+vector<string> DeathScreen;
+vector<string> WinScreen;
 //
 
 // Choi Poh Vars
 bool	g_Door1_Close;
 bool	g_Bat_Door_Close;
+bool	g_Bat_Door_Close1;
 bool	g_GeneraStatus;
+bool	g_GeneraStatus1;
 int Batteries;
 bool ifBattery1True;
 
@@ -57,9 +71,7 @@ COORD g_sTele[28] = { { 79, 30 },{ 91, 22 },{ 91, 30 },{ 89, 21 },{ 109, 26 }, /
 { 111, 25 },{ 100, 26 },{ 91, 26 },{ 98, 21 },{ 102, 29 }, //T10, T11, T12, T13, T14
 { 98, 25 },{ 109, 22 },{ 93, 25 },{ 98, 29 },{ 102, 25 }, //T15, T16, T17, T18, T19
 { 102, 21 },{ 107, 25 },{ 107, 21 },{ 93, 21 },{ 109, 30 }, //T20, T21, T22, T23, T24
-{ 111, 29 },{ 92, 16 },{ 84, 2 } }; //T25, T26, T27
-
-
+{ 111, 29 },{ 92, 16 },{ 86, 2 } }; //T25, T26, T27
 
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 // Console object
@@ -77,7 +89,7 @@ Console g_Console(160, 40, "SP1 Framework");
 void init( void )
 {
 	// character position
-	g_sChar.m_cLocation.X = 2;	//2, 9
+	g_sChar.m_cLocation.X = 53;	//2, 9
 	g_sChar.m_cLocation.Y = 14;	//14, 98
 	g_sChar.m_bActive = true;
 
@@ -105,11 +117,15 @@ void init( void )
 	//PengYang Init
 	//bool door & switch
 	doorClosed = true;
+	doorClosed1 = true;
+	
 	switchOn = false;
+	
 	B1 = true;
 	B2 = true;
 	B3 = true;
 	B4 = true;
+	
 	ClearedPuz = false;
 
 	//character & object
@@ -156,67 +172,96 @@ void init( void )
 	//loads map
 	loadMap();
 	loadTextScreen();
+	loadDeathScreen();
+	loadWinScreen();
 
 	//music , uncomment to play , comment to mute
-	//PlaySound(TEXT("music.wav"), NULL, SND_FILENAME | SND_LOOP | SND_NOSTOP | SND_ASYNC);
+	PlaySound(TEXT("music.wav"), NULL, SND_FILENAME | SND_LOOP | SND_NOSTOP | SND_ASYNC);
 
 	//BOT POS Struct array.
-	BOT[0] = { 3 , 7 , 0 , 1 , 13};
-	BOT[1] = { 16 , 9 , 0 , -1 , 13 };
-	BOT[2] = { 30 , 27 , 0 , 1 , 39};
-	BOT[3] = { 69 , 27 , 0 , -1 , 39};
-	BOT[4] = { 84 , 30 , 0 , -1 , 11};
-	BOT[5] = { 3 , 11 , 0 , 1 ,13 };
-	//
+	// X , Y , Step , Dir , Range
+	BOT[0] = { 2 , 5 , 0 , 1 , 14 };
+	BOT[1] = { 16 , 7 , 0 , -1 , 14 };
+	BOT[2] = { 30 , 27 , 0 , 1 , 28 };
+	BOT[3] = { 58 , 27 , 0 , -1 , 28 };
+	BOT[4] = { 84 , 30 , 0 , -1 , 11 };
+	BOT[5] = { 2 , 9 , 0 , 1 ,14 };
 	
-	//Choi Poh Init
-	//For Batteries
-	g_sBatteries.m_cLocation.X = 4;
-	g_sBatteries.m_cLocation.Y = 4;
-	g_sBatteries.m_bActive = true;
-
-	g_sBatteries1.m_cLocation.X = 9;
-	g_sBatteries1.m_cLocation.Y = 9;
-	g_sBatteries1.m_bActive = true;
-
-	g_sBatteries2.m_cLocation.X = 11;
-	g_sBatteries2.m_cLocation.Y = 11;
-	g_sBatteries2.m_bActive = true;
-
-	g_sBatteries3.m_cLocation.X = 8;
-	g_sBatteries3.m_cLocation.Y = 8;
-	g_sBatteries3.m_bActive = true;
-
-	g_sBatteries4.m_cLocation.X = 13;
-	g_sBatteries4.m_cLocation.Y = 11;
-	g_sBatteries4.m_bActive = true;
-
+	//-------------------------------------Choi Poh Init----------------------------------------------------
+	
+	//Declarations
 	Batteries == 0;
 
+	//-----Objects Coord-----
+
+	//Batteries
+	g_sBatteries.m_cLocation.X = 56; // ice battery   x 40 y 7
+	g_sBatteries.m_cLocation.Y = 15;
+
+	g_sBatteries1.m_cLocation.X = 56; // toggle battery sight x 73 y 1
+	g_sBatteries1.m_cLocation.Y = 16;
+
+	g_sBatteries2.m_cLocation.X = 56; // 9 switch battery x 86 y 1
+	g_sBatteries2.m_cLocation.Y = 17;
+
+	g_sBatteries3.m_cLocation.X = 57; //moving block door battery x 9 y 1
+	g_sBatteries3.m_cLocation.Y = 18;
+
+	g_sBatteries4.m_cLocation.X = 57; //moving block door battery x 69 y 26
+	g_sBatteries4.m_cLocation.Y = 19;
+
+	//Doors
+	g_sDoor1.m_cLocation.X = 59;
+	g_sDoor1.m_cLocation.Y = 26;
+
+	g_sBatDoor.m_cLocation.X = 63; 
+	g_sBatDoor.m_cLocation.Y = 18;
+
+	g_sBatDoor1.m_cLocation.X = 102;
+	g_sBatDoor1.m_cLocation.Y = 3;
+
+	g_sBatDoor2.m_cLocation.X = 101;
+	g_sBatDoor2.m_cLocation.Y = 16;
+
 	//For Generator
-	g_sGenerator.m_cLocation.X = 54;
-	g_sGenerator.m_cLocation.Y = 21;
+	g_sGenerator.m_cLocation.X = 49;
+	g_sGenerator.m_cLocation.Y = 20;
+
+	g_sGenerator1.m_cLocation.X = 53;
+	g_sGenerator1.m_cLocation.Y = 20;
+
+	//For Levers
+	g_slever1.m_cLocation.X = 43;
+	g_slever1.m_cLocation.Y = 21;
+
+	//-----bActives-----
+
+	//Batteries
+	g_sBatteries.m_bActive = true;
+	g_sBatteries1.m_bActive = true;
+	g_sBatteries2.m_bActive = true;
+	g_sBatteries3.m_bActive = true;
+	g_sBatteries4.m_bActive = true;
+
+	//Generators
 	g_sGenerator.m_bActive = true;
-
-	//For Doors
-	g_sDoor1.m_cLocation.X = 9;
-	g_sDoor1.m_cLocation.Y = 4;
+	g_sGenerator1.m_bActive = true;
+	
+	//Doors
 	g_sDoor1.m_bActive = true;
-
-	g_sBatDoor.m_cLocation.X = 9;
-	g_sBatDoor.m_cLocation.Y = 12;
 	g_sBatDoor.m_bActive = true;
-	//
+	g_sBatDoor1.m_bActive = true;
+	g_sBatDoor2.m_bActive = true;
 
-	//Bool Function
+	//Levers
+	g_slever1.m_bActive = true;
+
+	//-----Bool Function-----
 	g_Door1_Close = true;		//door1 close
 	g_Bat_Door_Close = true;	//battery door close
-	g_GeneraStatus = true;		// Generator off
-
-								//For Levers
-	g_slever1.m_cLocation.X = 13;
-	g_slever1.m_cLocation.Y = 2;
-	g_slever1.m_bActive = true;
+	g_Bat_Door_Close1 = true;	//battery door close
+	g_GeneraStatus = true;		// Generator 1 off
+	g_GeneraStatus1 = true;		// Generator 2 off
 	//
 
 	//----------------------------------------------------------------
@@ -258,6 +303,7 @@ void getInput( void )
 	g_abKeyPressed[K_RIGHT] = isKeyPressed(0x44);
 	g_abKeyPressed[K_SPACE] = isKeyPressed(VK_SPACE);
 	g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	g_abKeyPressed[K_ResetBox] = isKeyPressed(0x52);
 }
 
 //--------------------------------------------------------------
@@ -283,11 +329,14 @@ void update(double dt) // every delta time run this
 
     switch (g_eGameState)
     {
-        case S_SPLASHSCREEN : splashScreenWait(); // game logic for the splash screen
-            break;
-
-        case S_GAME: gameplay(); // gameplay logic when we are in the game
-            break;
+	case S_SPLASHSCREEN: splashScreenWait(); // game logic for the splash screen
+		break;
+	case S_GAME: gameplay(); // gameplay logic when we are in the game
+		break;
+	case S_DEATHSCREEN: whileDeathScreen(); // game logic for deathscreen
+		break;
+	case S_WINSCREEN: whileWinScreen();
+		break;
     }
 }
 //--------------------------------------------------------------
@@ -303,10 +352,14 @@ void render()
     clearScreen();      // clears the current screen and draw from scratch 
     switch (g_eGameState)
     {
-        case S_SPLASHSCREEN: renderSplashScreen();
-            break;
-        case S_GAME: renderGame();
-            break;
+	case S_SPLASHSCREEN: renderSplashScreen();
+		break;
+	case S_GAME: renderGame();
+		break;
+	case S_DEATHSCREEN: renderDeathScreen();
+		break;
+	case S_WINSCREEN: renderWinScreen();
+		break;
     }
 
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
@@ -351,8 +404,44 @@ void gameplay()            // gameplay logic
 	//PengYang gameplay
 	puzzswitch();
 	doorCheck();
+
 	blocksMovement();
 	//
+}
+
+//PY
+void doorCheck()
+{
+	int pairChecker = 0;
+	doorClosed = true;
+	doorClosed1 = true;
+	for (int p = 0; p <= 1; p++)        //checking which plates the character triggered
+	{
+		pairChecker++;
+		if (g_sChar.m_cLocation.X == g_sTrigPlate[p].Loc.X && g_sChar.m_cLocation.Y == g_sTrigPlate[p].Loc.Y ||
+			g_sBlock[p].Loc.X == g_sTrigPlate[p].Loc.X && g_sBlock[p].Loc.Y == g_sTrigPlate[p].Loc.Y)
+		{
+			switch (pairChecker)
+			{
+			case 1:
+				if (g_sDoors[0].Loc.Y != (char)32 && g_sDoors[0].Loc.X != (char)32) //
+				{
+					map[g_sDoors[0].Loc.Y][g_sDoors[0].Loc.X] = (char)32;
+					//g_Console.writeToBuffer(doorz[0], (char)32, 6);
+					doorClosed = false;
+				}
+				break;
+			case 2:
+				if (g_sDoors[2].Loc.Y != (char)32 && g_sDoors[2].Loc.X != (char)32) //
+				{
+					map[g_sDoors[2].Loc.Y][g_sDoors[2].Loc.X] = (char)32;
+					//g_Console.writeToBuffer(doorz[2], (char)32, 6);
+					doorClosed1 = false;
+				}
+				break;
+			}
+		}
+	}
 }
 
 void puzzswitch()
@@ -437,41 +526,6 @@ void puzzTrigger()
 
 }
 
-
-//PY
-void doorCheck()
-{
-	int pairChecker = 0;
-	doorClosed = true;
-	for (int p = 0; p <= 1; p++)		//checking which plates the character triggered
-	{
-		pairChecker++;
-		if (g_sChar.m_cLocation.X == g_sTrigPlate[p].Loc.X && g_sChar.m_cLocation.Y == g_sTrigPlate[p].Loc.Y ||
-			g_sBlock[p].Loc.X == g_sTrigPlate[p].Loc.X && g_sBlock[p].Loc.Y == g_sTrigPlate[p].Loc.Y)
-		{
-			switch (pairChecker)
-			{
-			case 1:
-				if (g_sDoors[0].Loc.Y != (char)32 && g_sDoors[0].Loc.X != (char)32) //
-				{
-					map[g_sDoors[0].Loc.Y][g_sDoors[0].Loc.X] = (char)32;
-					//g_Console.writeToBuffer(doorz[0], (char)32, 6);
-					doorClosed = false;
-				}
-				break;
-			case 2:
-				if (g_sDoors[2].Loc.Y != (char)32 && g_sDoors[2].Loc.X != (char)32) //
-				{
-					map[g_sDoors[2].Loc.Y][g_sDoors[2].Loc.X] = (char)32;
-					//g_Console.writeToBuffer(doorz[2], (char)32, 6);
-					doorClosed = false;
-				}
-				break;
-			}
-		}
-	}
-}
-
 //sufyan -------- checking if the player steps off the wrong path in memory room ---------
 void floorCollision()
 {
@@ -514,6 +568,107 @@ void floorCollision()
 			lifepoint -= 1;
 		}
 	}
+}
+
+//sufyan -------- print the death screen when player use up all 3 lives --------
+void renderDeathScreen()
+{
+	COORD a;
+	COORD b;
+	COORD c;
+
+	int y = 0;
+	int x = 0;
+	for (int i = 0; i < DeathScreen.size(); i++)
+	{
+		a.X = x;
+		a.Y = y;
+		g_Console.writeToBuffer(a, DeathScreen[i], 12);
+		y++;
+	}
+
+	b.X = 46;
+	b.Y = 19;
+
+	c.X = 50;
+	c.Y = 21;
+
+	g_Console.writeToBuffer(b, "How unlucky. Better luck next time.", 12);
+	g_Console.writeToBuffer(c, "Press ESC to end the game");
+}
+
+//sufyan -------- screen for the death screen ---------
+void loadDeathScreen()
+{
+	//pushing text file into vector
+	string line;
+	ifstream deathscreenfile("deathscreen.txt");
+
+	//storing text text file into vector string
+	if (deathscreenfile.is_open())
+	{
+		while (getline(deathscreenfile, line))
+		{
+			DeathScreen.push_back(line);
+		}
+		deathscreenfile.close();
+	}
+}
+
+//sufyan -------- while the player is in the death screen ---------
+void whileDeathScreen()
+{
+	processUserInput();
+}
+
+//sufyan 
+void renderWinScreen()
+{
+	COORD a;
+	COORD b;
+	COORD c;
+
+	int y = 0;
+	int x = 0;
+	for (int i = 0; i < WinScreen.size(); i++)
+	{
+		a.X = x;
+		a.Y = y;
+		g_Console.writeToBuffer(a, WinScreen[i], 12);
+		y++;
+	}
+
+	b.X = 27;
+	b.Y = 19;
+
+	c.X = 30;
+	c.Y = 21;
+
+	g_Console.writeToBuffer(b, "Your Total Time taken is : ");
+	g_Console.writeToBuffer(c, " Pres Esc to End the Game");
+
+}
+
+//sufyan
+void loadWinScreen()
+{
+	string line;
+	ifstream winscreenfile("winscreen.txt");
+
+	//storing text text file into vector string
+	if (winscreenfile.is_open())
+	{
+		while (getline(winscreenfile, line))
+		{
+			WinScreen.push_back(line);
+		}
+		winscreenfile.close();
+	}
+}
+
+void whileWinScreen()
+{
+	processUserInput();
 }
 
 void doorCollision()
@@ -630,12 +785,11 @@ void coinCollision()
 	}
 }
 
-
 void moveCharacter()
 {
-    bool bSomethingHappened = false;
-    if (g_dBounceTime > g_dElapsedTime)
-        return;
+	bool bSomethingHappened = false;
+	if (g_dBounceTime > g_dElapsedTime)
+		return;
 
 	//Testing for death against Traps [red !!]
 	if ((map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X] == (char)19))
@@ -645,15 +799,15 @@ void moveCharacter()
 		g_sChar.m_cLocation.Y = startingpointy;
 	}
 
-    // Updating the location of the character based on the key press
-    // providing a beep sound whenver we shift the character
+	// Updating the location of the character based on the key press
+	// providing a beep sound whenver we shift the character
 
 	if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
 	{
 		//Checking for slipping motion.
 		while (true)
 		{
-			if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == (char)8 )
+			if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == (char)8)
 			{
 				g_sChar.m_cLocation.Y--;
 			}
@@ -667,13 +821,13 @@ void moveCharacter()
 			bSomethingHappened = true;
 		}
 	}
-    
+
 	if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
-    {
+	{
 		//Checking for slipping motion.
 		while (true)
 		{
-			if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == (char)8)	
+			if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == (char)8)
 			{
 				g_sChar.m_cLocation.X--;
 			}
@@ -681,22 +835,22 @@ void moveCharacter()
 		}
 
 		//Collision against wall.
-		if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X -1] != (char)219) 
+		if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] != (char)219)
 		{
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X--;
 			bSomethingHappened = true;
 		}
-    }
-    
+	}
+
 	if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
-    {
+	{
 		//Checking for slipping motion.
 		while (true)
 		{
-			if (map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == (char)8)	
+			if (map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == (char)8)
 			{
-					g_sChar.m_cLocation.Y++;
+				g_sChar.m_cLocation.Y++;
 			}
 			else break;
 		}
@@ -707,10 +861,10 @@ void moveCharacter()
 			g_sChar.m_cLocation.Y++;
 			bSomethingHappened = true;
 		}
-    }
-   
+	}
+
 	if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
-    {
+	{
 		//Checking for slipping motion.
 		while (true)
 		{
@@ -721,35 +875,53 @@ void moveCharacter()
 			else break;
 		}
 		//Collision against wall.
-		if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] != (char)219) 
+		if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] != (char)219)
 		{
 			//Beep(1440, 30);
 			g_sChar.m_cLocation.X++;
 			bSomethingHappened = true;
 		}
-    }
-	
-    if (g_abKeyPressed[K_SPACE])
-    {
-        g_sChar.m_bActive = !g_sChar.m_bActive;
-        bSomethingHappened = true;
-    }
-    if (bSomethingHappened) //after something happens
-    {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
-    }
+	}
+
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_sChar.m_bActive = !g_sChar.m_bActive;
+		bSomethingHappened = true;
+	}
+	if (bSomethingHappened) //after something happens
+	{
+		// set the bounce time to some time in the future to prevent accidental triggers
+		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+	}
+
+	if (g_abKeyPressed[K_ResetBox])
+	{
+		g_sBlock[0].Loc.X = 4;
+		g_sBlock[0].Loc.Y = 25;
+		g_sBlock[1].Loc.X = 38;
+		g_sBlock[1].Loc.Y = 21;
+
+		bSomethingHappened = true;
+	}
 }
 
 void BatGenerator()
 {
-	if (Batteries == 3)
+	/*if (Batteries == 3)
 	{
 		if (g_sChar.m_cLocation.X == g_sBatDoor.m_cLocation.X + 1 && g_sChar.m_cLocation.Y == g_sBatDoor.m_cLocation.Y)
 		{
 			g_Bat_Door_Close = false;
 		}
 	}
+
+	if (g_Bat_Door_Close == false)
+	{
+		if (Batteries == 2)
+		{
+			g_Bat_Door_Close1 = false;
+		}
+	}*/
 }
 
 void Teleporter()
@@ -805,10 +977,6 @@ void gameBatteries()
 		g_sBatteries4.m_cLocation.Y = 100;
 	}
 
-	if (g_GeneraStatus == false)
-	{
-		Batteries - 3 ;
-	}
 }
 
 void Levers()
@@ -823,7 +991,7 @@ void Collision()
 {
 	if (g_Door1_Close == true)
 	{
-		if (g_sChar.m_cLocation.Y == g_sDoor1.m_cLocation.Y && g_sChar.m_cLocation.X == g_sDoor1.m_cLocation.X)
+		if (g_sChar.m_cLocation.Y == g_sDoor1.m_cLocation.Y + 1 && g_sChar.m_cLocation.X == g_sDoor1.m_cLocation.X)
 		{
 			if (g_abKeyPressed[K_UP])
 			{
@@ -857,20 +1025,20 @@ void Collision()
 		}
 	}
 
-	if (g_Bat_Door_Close == true)
+	if (g_Bat_Door_Close == true || g_Bat_Door_Close1 == true)
 	{
-		if (g_sChar.m_cLocation.Y == g_sBatDoor.m_cLocation.Y && g_sChar.m_cLocation.X == g_sBatDoor.m_cLocation.X)
+		if (g_sChar.m_cLocation.Y == g_sBatDoor.m_cLocation.Y && g_sChar.m_cLocation.X == g_sBatDoor.m_cLocation.X || g_sChar.m_cLocation.Y == g_sBatDoor1.m_cLocation.Y && g_sChar.m_cLocation.X == g_sBatDoor1.m_cLocation.X || g_sChar.m_cLocation.Y == g_sBatDoor2.m_cLocation.Y && g_sChar.m_cLocation.X == g_sBatDoor2.m_cLocation.X)
 		{
 			if (g_abKeyPressed[K_UP])
 			{
-				if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] != (char)68)
+				if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] != (char)69)
 				{
 					g_sChar.m_cLocation.Y++;
 				}
 			}
 			else if (g_abKeyPressed[K_LEFT])
 			{
-				if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] != (char)68)
+				if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] != (char)69)
 				{
 					g_sChar.m_cLocation.X++;
 				}
@@ -878,14 +1046,14 @@ void Collision()
 			}
 			else if (g_abKeyPressed[K_DOWN])
 			{
-				if (map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] != (char)68)
+				if (map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] != (char)69)
 				{
 					g_sChar.m_cLocation.Y--;
 				}
 			}
 			else if (g_abKeyPressed[K_RIGHT])
 			{
-				if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] != (char)68)
+				if (map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] != (char)69)
 				{
 					g_sChar.m_cLocation.X--;
 				}
@@ -893,9 +1061,9 @@ void Collision()
 		}
 	}
 
-	if (g_GeneraStatus == false || g_GeneraStatus == true)
+	if (g_GeneraStatus == false || g_GeneraStatus1 == false || g_GeneraStatus == true || g_GeneraStatus1 == true)
 	{
-		if (g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y && g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X)
+		if (g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y && g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X || g_sChar.m_cLocation.Y == g_sGenerator1.m_cLocation.Y && g_sChar.m_cLocation.X == g_sGenerator1.m_cLocation.X)
 		{
 			if (g_abKeyPressed[K_UP])
 			{
@@ -933,6 +1101,7 @@ void Collision()
 //Gary
 void moveAIS() // movement of AI
 {
+	
 	//---------------------- if location of player is BOTposition -------------------------------
 	//-------------------------------moving horizontally-----------------------------------------
 	COORD targetDest1 = { (BOT[0].xpos + (BOT[0].dir * 1)) , (BOT[0].ypos) };
@@ -1034,6 +1203,7 @@ void moveAIS() // movement of AI
 			MovingAI(BOT, 4);
 		}
 	}
+	
 }
 
 void processUserInput()
@@ -1180,6 +1350,7 @@ void renderGame()
 	//PengYang
 	doorCollision();	
 	puzzTrigger();		
+	doorrender();
 	//
 
 	//Sufyan
@@ -1190,84 +1361,7 @@ void renderGame()
 	renderCharacter(); 
 }
 
-void renderText()
-{
-	COORD c = g_Console.getConsoleSize();
-	c.Y = 35;
-	c.X = 46;
 
-	//Switch Texts
-	if (g_sChar.m_cLocation.X == g_slever1.m_cLocation.X && g_sChar.m_cLocation.Y == g_slever1.m_cLocation.Y)
-	{
-		g_Console.writeToBuffer(c, "You have Opened a Door", 0x03);
-	}
-
-	//-----------------------------------Batteries Text----------------------------------------- 
-	COORD d = g_Console.getConsoleSize();
-	d.Y = 36;
-	d.X = 2;
-
-	//Battery Text
-	if (Batteries == 0)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 0", 0x03);
-	}
-	else if (Batteries == 1)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 1", 0x03);
-	}
-	else if (Batteries == 2)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 2", 0x03);
-	}
-	else if (Batteries == 3)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 3", 0x03);
-	}
-	else if (Batteries == 4)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 4", 0x03);
-	}
-	else if (Batteries == 5)
-	{
-		g_Console.writeToBuffer(d, "Batteries : 5", 0x03);
-	}
-	else
-	{
-		g_Console.writeToBuffer(d, "Batteries : 0", 0x03);
-	}
-
-	//Generator text
-	COORD e;
-	e.Y = 36;
-	e.X = 25;
-
-	COORD f;
-	f.Y = 37;
-	f.X = 25;
-
-	if (g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y + 1 || g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X + 1 && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y)
-	{
-		if (Batteries == 0)
-		{
-			g_Console.writeToBuffer(e, "Need 3 Batteries to power to Generator", 0x03);
-		}
-		else if (Batteries == 1)
-		{
-			g_Console.writeToBuffer(e, "Need 2 Batteries to power to Generator", 0x03);
-		}
-		else if (Batteries == 2)
-		{
-			g_Console.writeToBuffer(e, "Need 1 Batteries to power to Generator", 0x03);
-		}
-		else
-		{
-			g_Console.writeToBuffer(e, "Generator is on", 0x03);
-			g_Console.writeToBuffer(f, "-Door is Open-", 0x03);
-			g_GeneraStatus = false;
-		}
-	}
-}
 
 void loadMap() // level 1
 {
@@ -1368,38 +1462,33 @@ void renderMap()
 	//-----------------------------------------------------Legend area---------------------------------------------------
 	//legend monster
 
-	d.X = 120;
-	d.Y = 22;
 
-	g_Console.writeToBuffer(d, 197 , 12);
-	d.X += 1;
-	g_Console.writeToBuffer(d, " = MONSTER", 12);
 
 	//legend door
 
 	e.X = 120;
 	e.Y = 24;
 
-	g_Console.writeToBuffer(e, 178, 5);
+	g_Console.writeToBuffer(e, 178, 6);
 	e.X += 1;
-	g_Console.writeToBuffer(e, " = Door", 3);
+	g_Console.writeToBuffer(e, " = Door", 6);
 
 	//legend switch
 
 	f.X = 120;
 	f.Y = 26;
 
-	g_Console.writeToBuffer(f, 33, 2);
+	g_Console.writeToBuffer(f, 202, 11);
 	f.X += 1;
 
-	g_Console.writeToBuffer(f, " = switch", 2);
+	g_Console.writeToBuffer(f, " = switch", 11);
 
 	//legend movable block
 
 	g.X = 120;
 	g.Y = 28;
 
-	g_Console.writeToBuffer(g, 254 , 8);
+	g_Console.writeToBuffer(g, 254, 8);
 	g.X += 1;
 
 	g_Console.writeToBuffer(g, " = moving block", 8);
@@ -1410,20 +1499,22 @@ void renderMap()
 	i.X = 120;
 	i.Y = 30;
 
+
+	d.X = 2;
+	d.Y = 35;
+
+	g_Console.writeToBuffer(d, "Anything red kills you", 12);
 	string cordx;
 	string cordy;
 
-	int x = g_sChar.m_cLocation.X;
-	g_Console.writeToBuffer(h, x , 6); // x cord of player
-	g_Console.writeToBuffer(i, g_sChar.m_cLocation.Y, 6); // y cord of player
-
-	
 	//coin indicator
 	k.X = 2;
 	k.Y = 33;
 
-	g_Console.writeToBuffer(k, "Coins Collected : ", 3);
-	k.X += 18;
+	g_Console.writeToBuffer(k, 42, 3);
+	k.X += 2;
+	g_Console.writeToBuffer(k, " , Coins Collected : ", 3);
+	k.X += 21;
 
 	ostringstream str1;
 	str1 << coinAmt;
@@ -1465,8 +1556,17 @@ void renderCharacter() //printing characters every frame
 	c.Y = g_sChar.m_cLocation.Y ;
 	
     g_Console.writeToBuffer(c, 12, 15);
+
+	if (g_sChar.m_cLocation.X == 140 && g_sChar.m_cLocation.Y == 12)
+	{
+		g_sChar.m_cLocation.X = 0;
+		g_sChar.m_cLocation.Y = 0;
+		g_eGameState = S_WINSCREEN;
+	}
 }
 
+
+//-----Choi Poh-----
 void renderDoor()
 {
 	WORD doorColor = 0x0F;
@@ -1491,18 +1591,35 @@ void renderBatDoor()
 {
 	WORD doorColor = 0x0F;
 
-	COORD a;
+	COORD a, b, c;
 
 	a.X = g_sBatDoor.m_cLocation.X;
-	a.Y = g_sBatDoor.m_cLocation.Y + 1;
+	a.Y = g_sBatDoor.m_cLocation.Y;
+
+	b.X = g_sBatDoor1.m_cLocation.X;
+	b.Y = g_sBatDoor1.m_cLocation.Y;
+
+	c.X = g_sBatDoor2.m_cLocation.X;
+	c.Y = g_sBatDoor2.m_cLocation.Y;
 
 	if (g_Bat_Door_Close == true)
 	{
-		g_Console.writeToBuffer(a, (char)68, doorColor);
+		g_Console.writeToBuffer(a, (char)69, doorColor);
 	}
 	else
 	{
 		g_Console.writeToBuffer(a, (char)32, doorColor);
+	}
+
+	if (g_Bat_Door_Close1 == true)
+	{
+		g_Console.writeToBuffer(b, (char)69, doorColor);
+		g_Console.writeToBuffer(c, (char)69, doorColor);
+	}
+	else
+	{
+		g_Console.writeToBuffer(b, (char)32, doorColor);
+		g_Console.writeToBuffer(c, (char)32, doorColor);
 	}
 }
 
@@ -1542,22 +1659,171 @@ void renderBatteries()
 
 }
 
+void renderText()
+{
+	COORD c = g_Console.getConsoleSize();
+	c.Y = 35;
+	c.X = 46;
+
+	//Switch Texts
+	if (g_sChar.m_cLocation.X == g_slever1.m_cLocation.X && g_sChar.m_cLocation.Y == g_slever1.m_cLocation.Y)
+	{
+		g_Console.writeToBuffer(c, "You have Opened a Door", 0x03);
+	}
+
+	//-----------------------------------Batteries Text----------------------------------------- 
+	COORD d = g_Console.getConsoleSize();
+	d.Y = 36;
+	d.X = 2;
+
+	//Battery Text
+	if (Batteries == 0)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 0", 0x03);
+	}
+	else if (Batteries == 1)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 1", 0x03);
+	}
+	else if (Batteries == 2)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 2", 0x03);
+	}
+	else if (Batteries == 3)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 3", 0x03);
+	}
+	else if (Batteries == 4)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 4", 0x03);
+	}
+	else if (Batteries == 5)
+	{
+		g_Console.writeToBuffer(d, "Batteries : 5", 0x03);
+	}
+	else
+	{
+		g_Console.writeToBuffer(d, "Batteries : 0", 0x03);
+	}
+
+	//Generator 1 text
+	COORD e;
+	e.Y = 36;
+	e.X = 25;
+
+	COORD f;
+	f.Y = 37;
+	f.X = 25;
+
+	//Generator 2 text
+
+	COORD g;
+	g.Y = 36;
+	g.X = 25;
+
+	COORD h;
+	h.Y = 37;
+	h.X = 25;
+
+
+	if (g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y - 1 ||
+		g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y + 1 ||
+		g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X + 1 && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y ||
+		g_sChar.m_cLocation.X == g_sGenerator.m_cLocation.X - 1 && g_sChar.m_cLocation.Y == g_sGenerator.m_cLocation.Y)
+	{
+		if (g_GeneraStatus != false)
+		{
+			if (Batteries == 0)
+			{
+				g_Console.writeToBuffer(e, "Need 3 Batteries to power to Generator", 0x03);
+			}
+			else if (Batteries == 1)
+			{
+				g_Console.writeToBuffer(e, "Need 2 Batteries to power to Generator", 0x03);
+			}
+			else if (Batteries == 2)
+			{
+				g_Console.writeToBuffer(e, "Need 1 Batteries to power to Generator", 0x03);
+			}
+			else if (Batteries == 3)
+			{
+				g_GeneraStatus = false;
+				Batteries -= 3;
+			}
+		}
+		else
+		{
+			g_Console.writeToBuffer(e, "Generator 1 is on", 0x03);
+			g_Console.writeToBuffer(f, "-Door is Open-", 0x03);
+		}
+	}
+
+	if (g_sChar.m_cLocation.X == g_sGenerator1.m_cLocation.X && g_sChar.m_cLocation.Y == g_sGenerator1.m_cLocation.Y - 1 ||
+		g_sChar.m_cLocation.X == g_sGenerator1.m_cLocation.X && g_sChar.m_cLocation.Y == g_sGenerator1.m_cLocation.Y + 1 ||
+		g_sChar.m_cLocation.X == g_sGenerator1.m_cLocation.X + 1 && g_sChar.m_cLocation.Y == g_sGenerator1.m_cLocation.Y ||
+		g_sChar.m_cLocation.X == g_sGenerator1.m_cLocation.X - 1 && g_sChar.m_cLocation.Y == g_sGenerator1.m_cLocation.Y)
+	{
+		if (g_GeneraStatus == false)
+		{
+			if (g_GeneraStatus1 != false)
+			{
+				if (Batteries == 0)
+				{
+					g_Console.writeToBuffer(e, "Need 2 Batteries to power to Generator", 0x03);
+				}
+				else if (Batteries == 1)
+				{
+					g_Console.writeToBuffer(e, "Need 1 Batteries to power to Generator", 0x03);
+				}
+				else if (Batteries == 2)
+				{
+					g_GeneraStatus1 = false;
+					Batteries -= 2;
+				}
+			}
+			else
+			{
+				g_Console.writeToBuffer(e, "Generator 2 is on", 0x03);
+				g_Console.writeToBuffer(f, "-Door is Open-", 0x03);
+			}
+		}
+		else
+		{
+			g_Console.writeToBuffer(e, "Think i have to on the first generator first!", 0x03);
+		}
+	}
+
+
+
+
+}
+
 //----------------------------------Render da Generatorto------------------------------------
 void renderGenerator()
 {
 	WORD GeneratorColor = 0x0F;
-
-	COORD a;
+	
+	COORD a, b;
 
 	a.X = g_sGenerator.m_cLocation.X;
-	a.Y = g_sGenerator.m_cLocation.Y + 1;
+	a.Y = g_sGenerator.m_cLocation.Y;
+
+	b.X = g_sGenerator1.m_cLocation.X;
+	b.Y = g_sGenerator1.m_cLocation.Y;
 
 	if (g_GeneraStatus == false)
 	{
 		g_Bat_Door_Close = false;
 	}
 
+	if (g_GeneraStatus1 == false)
+	{
+		g_Bat_Door_Close1 = false;
+	}
+
 	g_Console.writeToBuffer(a, (char)158, GeneratorColor);
+
+	g_Console.writeToBuffer(b, (char)158, GeneratorColor);
 }
 
 //Gary ---------------------------------Life Points---------------------------------
@@ -1598,12 +1864,23 @@ void renderlives()
 		g_Console.writeToBuffer(death, "You Have 1 life left :o you are really bad at this /._./ ", 13);
 	}
 
-
-	
-	if (lifepoint == 0) //if life points are 0
+	if (lifepoint == 0)
 	{
-		g_Console.clearBuffer();
-		g_Console.writeToBuffer(end, "Game Over !!! Nice Try . Hit ESC to exit. ", 006);
+		g_eGameState = S_DEATHSCREEN;
+	}
+}
+
+void doorrender()
+{
+	if (doorClosed == true)
+	{
+		map[g_sDoors[0].Loc.Y][g_sDoors[0].Loc.X] = (char)68;
+		g_Console.writeToBuffer(doorz[0], (char)178, 6);
+	}
+	if (doorClosed1 == true)
+	{
+		map[g_sDoors[2].Loc.Y][g_sDoors[2].Loc.X] = (char)68;
+		g_Console.writeToBuffer(doorz[2], (char)178, 6);
 	}
 }
 
@@ -1625,6 +1902,7 @@ void renderFramerate()
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
 }
+
 void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written

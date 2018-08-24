@@ -26,15 +26,19 @@ enum EKEYS
     K_RIGHT,
     K_ESCAPE,
     K_SPACE,
+	K_ResetBox,
     K_COUNT
+	
 };
 
 // Enumeration for the different screen states
 enum EGAMESTATES
 {
-    S_SPLASHSCREEN,
-    S_GAME,
-    S_COUNT
+	S_SPLASHSCREEN,
+	S_GAME,
+	S_DEATHSCREEN,
+	S_WINSCREEN,
+	S_COUNT
 };
 
 // struct for the game character
@@ -58,6 +62,12 @@ struct ROBOTS
 	int step;
 	int dir;
 	int range;
+};
+
+struct COINS
+{
+	int xpos;
+	int ypos;
 };
 
 
@@ -103,11 +113,18 @@ void blocksMovement();		// moving blocks
 void puzzswitch();			// puzzle with 9 switch
 void puzzTrigger();			// render puzzle wall
 							// will be doing timer switch
+void doorrender();
 
 //Sufyan
 void renderVisibility();
 void floorCollision();
 void coinCollision();
+void renderDeathScreen();
+void loadDeathScreen();
+void whileDeathScreen();
+void loadWinScreen();
+void renderWinScreen();
+void whileWinScreen();
 
 //
 
