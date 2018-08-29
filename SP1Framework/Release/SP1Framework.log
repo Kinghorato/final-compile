@@ -1,0 +1,37 @@
+﻿  game.cpp
+game.cpp(807): warning C4018: '<': signed/unsigned mismatch
+game.cpp(863): warning C4018: '<': signed/unsigned mismatch
+game.cpp(906): warning C4018: '<': signed/unsigned mismatch
+game.cpp(932): warning C4018: '<': signed/unsigned mismatch
+game.cpp(962): warning C4018: '<': signed/unsigned mismatch
+game.cpp(994): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1029): warning C4018: '<': signed/unsigned mismatch
+game.cpp(858): warning C4101: 'g': unreferenced local variable
+game.cpp(1067): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1134): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1187): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1427): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\conio.h(452): note: see declaration of 'getch'
+game.cpp(1830): warning C4309: 'argument': truncation of constant value
+game.cpp(1845): warning C4309: 'argument': truncation of constant value
+game.cpp(1914): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1918): warning C4309: '=': truncation of constant value
+game.cpp(1941): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1943): warning C4018: '<': signed/unsigned mismatch
+game.cpp(1948): warning C4309: 'argument': truncation of constant value
+game.cpp(1972): warning C4309: 'argument': truncation of constant value
+game.cpp(1977): warning C4309: 'argument': truncation of constant value
+game.cpp(1982): warning C4309: 'argument': truncation of constant value
+game.cpp(2011): warning C4309: 'argument': truncation of constant value
+game.cpp(2018): warning C4309: 'argument': truncation of constant value
+game.cpp(2032): warning C4309: 'argument': truncation of constant value
+game.cpp(2041): warning C4309: 'argument': truncation of constant value
+game.cpp(2051): warning C4309: 'argument': truncation of constant value
+game.cpp(2079): warning C4018: '<': signed/unsigned mismatch
+  Generating code
+  2 of 374 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  SP1Framework.vcxproj -> D:\Users\l533\Desktop\final compile 2018\Release\SP1Framework.exe
+  SP1Framework.vcxproj -> D:\Users\l533\Desktop\final compile 2018\Release\SP1Framework.pdb (Full PDB)

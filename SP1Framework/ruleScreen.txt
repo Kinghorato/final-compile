@@ -1,0 +1,39 @@
+                                                                                                                             
+       88  88        88                                      888888888888             88888888ba   88                           88  
+       88  88        88                                           88                  88      "8b  88                           88  
+       88  88        88                                           88                  88      ,8P  88                           88  
+       88  88aaaaaaaa88   ,adPPYba,   8b      db      d8          88   ,adPPYba,      88aaaaaa8P'  88  ,adPPYYba,  8b       d8  88  
+       88  88""""""""88  a8"     "8a  `8b    d88b    d8'          88  a8"     "8a     88""""""'    88  ""     `Y8  `8b     d8'  88    
+       88  88        88  8b       d8   `8b  d8'`8b  d8'           88  8b       d8     88           88  ,adPPPPP88   `8b   d8'   88  
+       88  88        88  "8a,   ,a8"    `8bd8'  `8bd8'            88  "8a,   ,a8"     88           88  88,    ,88    `8b,d8'    88  
+       88  88        88   `"YbbdP"'       YP      YP              88   `"YbbdP"'      88           88  `"8bbdP"Y8      Y88'     88  
+       88                                                                                                              d8'      88 
+    ====================================================================================================================================
+                                           To move around are using the traditional WASD keys.
+
+
+                       The player must travel around the Dungeon and reach the end of the dungeon by solving different puzzles
+                                                       and avoiding traps along their way. 
+ 
+
+                                     There are coins '*' which players can collect to get a score at 
+                                                           the end of the game. 
+
+
+                                 Objects with a color red are threatening which will decrease the player's life
+                                             by 1. The total amount of lives the player has is 
+                                                       displayed at the bottom left.
+
+
+                                When the player reaches a specific room, a text box will appear at the bottom right 
+                                     of the screen. It will describe what the player has to do for the room.
+
+
+                                      Each room will reward the player with a battery which is essential to
+                                                         progress through the game.
+
+
+                                           The game is over if the player dies and uses up all 3 lives.
+
+
+                                                        

@@ -4,6 +4,7 @@
 #include "Framework\timer.h"
 #include "AI.h"
 
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -11,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <conio.h>
 
 using namespace std;
 
@@ -24,9 +26,12 @@ enum EKEYS
     K_DOWN,
     K_LEFT,
     K_RIGHT,
+	K_BACK,
     K_ESCAPE,
     K_SPACE,
 	K_ResetBox,
+	K_One, K_Two, K_Three,
+	K_PAUSE,
     K_COUNT
 	
 };
@@ -34,10 +39,12 @@ enum EKEYS
 // Enumeration for the different screen states
 enum EGAMESTATES
 {
-	S_SPLASHSCREEN,
+	S_MENU,
+	S_RULES,
 	S_GAME,
 	S_DEATHSCREEN,
 	S_WINSCREEN,
+	S_SCOREBOARD,
 	S_COUNT
 };
 
@@ -48,10 +55,8 @@ struct SGameChar
     bool  m_bActive;
 };
 
-struct objects {
+struct objects { //PY
 	COORD Loc;
-	//bool SandD;
-
 };
 
 // struct for the AI in the game.
@@ -64,12 +69,24 @@ struct ROBOTS
 	int range;
 };
 
+struct TRAPS {
+	int xpos;
+	int ypos;
+	int step;
+	int range;
+};
+
 struct COINS
 {
 	int xpos;
 	int ypos;
 };
 
+struct CHECKTELE
+{
+	int newcharposx;
+	int newcharposy;
+};
 
 void init        ( void );      // initialize your variables, allocate memory, etc
 void getInput    ( void );      // get input from player
@@ -85,12 +102,14 @@ void processUserInput();    // checks if you should change states or do somethin
 void clearScreen();         // clears the current screen and draw from scratch 
 
 void moveAIS();
+void moveTraps();
 
 void renderSplashScreen();  // renders the splash screen
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderAIS();
 void renderlives();
+void renderTraps();
 
 //Choi Poh
 void Teleporter();
@@ -103,6 +122,9 @@ void gameBatteries();
 void Levers();
 void Collision();
 void renderGenerator();
+void Checkpointer();
+void timerSwitch();
+void timerSwitchBool();
 //
 
 //PY
@@ -111,19 +133,36 @@ void doorCheck();			// check which door character or block is hitting
 void blocksMovement();		// moving blocks
 void puzzswitch();			// puzzle with 9 switch
 void puzzTrigger();			// render puzzle wall
-							// will be doing timer switch
-void doorrender();
+void trapShoot();			//trap shooter
+void rollerBarrel();		//barrel roller
+void renderbullet();
+void overwriteDoor();
+//
 
 //Sufyan
 void renderVisibility();
 void floorCollision();
 void coinCollision();
+
 void renderDeathScreen();
 void loadDeathScreen();
 void whileDeathScreen();
+
 void loadWinScreen();
 void renderWinScreen();
 void whileWinScreen();
+
+void renderScoreboard();
+void loadScoreboard();
+void whileScoreboard();
+
+void loadMenuScreen();
+void renderMenuScreen();
+void whileMenuScreen();
+
+void loadRuleScreen();
+void renderRuleScreen();
+void whileRuleScreen();
 
 //
 
